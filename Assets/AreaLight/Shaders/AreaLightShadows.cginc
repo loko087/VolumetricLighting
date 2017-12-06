@@ -1,4 +1,8 @@
+#ifdef SHADER_API_PSSL
+//ConstantBuffer  POISSON_DISKS {
+#else
 cbuffer POISSON_DISKS {
+#endif
 	static half2 poisson[40] = {
 		half2(0.02971195f, 0.8905211f),
 		half2(0.2495298f, 0.732075f),
@@ -41,7 +45,10 @@ cbuffer POISSON_DISKS {
 		half2(0.9907925f, 0.08320642f),
 		half2(0.8386722f, -0.5428791f)
 	};
+#ifdef SHADER_API_PSSL
+#else
 };
+#endif
 
 Texture2D _Shadowmap;
 SamplerComparisonState sampler_Shadowmap;

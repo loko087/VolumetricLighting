@@ -1,4 +1,6 @@
 // Based on 'Real-Time Polygonal-Light Shading with Linearly Transformed Cosines'
+// Upgrade NOTE: excluded shader from OpenGL ES 2.0 because it uses non-square matrices
+#pragma exclude_renderers gles
 // https://labs.unity.com/article/real-time-polygonal-light-shading-linearly-transformed-cosines
 
 #if AREA_LIGHT_ENABLE_DIFFUSE
@@ -197,7 +199,11 @@ half3 CalculateLight (half3 position, half3 diffColor, half3 specColor, half one
 		
 	// Transform light vertices into that space
 	half4x3 L;
+#ifdef SHADER_API_PSSL
+	L = (float4x3)_LightVerts - float4x3(position, position, position, position);
+#else
 	L = _LightVerts - half4x3(position, position, position, position);
+#endif
 	L = mul(L, transpose(basis));
 
 	// UVs for sampling the LUTs

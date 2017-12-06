@@ -191,8 +191,15 @@ public class VolumetricFog : MonoBehaviour
 	{
 		int count = m_PointLightParamsCB == null ? 0 : m_PointLightParamsCB.count;
 		m_InjectLightingAndDensity.SetFloat("_PointLightsCount", count);
-		if (count == 0)
-			return;
+        if (count == 0)
+        {
+#if UNITY_PS4
+            //We need to set the buffer even if it doesn't have nothing to avoid the "Null buffer passed into compute shader warning" message
+            m_PointLightParamsCB = new ComputeBuffer(1, 4);
+            m_InjectLightingAndDensity.SetBuffer(kernel, "_PointLights", m_PointLightParamsCB);
+#endif
+            return;
+        }
 
 		if (m_PointLightParams == null || m_PointLightParams.Length != count)
 			m_PointLightParams = new PointLightParams[count];
@@ -225,8 +232,18 @@ public class VolumetricFog : MonoBehaviour
 	{
 		int count = m_TubeLightParamsCB == null ? 0 : m_TubeLightParamsCB.count;
 		m_InjectLightingAndDensity.SetFloat("_TubeLightsCount", count);
-		if (count == 0)
-			return;
+        if (count == 0)
+        {
+#if UNITY_PS4
+            //We need to set the buffer even if it doesn't have nothing to avoid the "Null buffer passed into compute shader warning" message
+            m_TubeLightParamsCB = new ComputeBuffer(1, 4);
+            m_InjectLightingAndDensity.SetBuffer(kernel, "_TubeLights", m_TubeLightParamsCB);
+
+            m_TubeLightShadowPlaneParamsCB = new ComputeBuffer(1, 4);
+            m_InjectLightingAndDensity.SetBuffer(kernel, "_TubeLightShadowPlanes", m_TubeLightShadowPlaneParamsCB);
+#endif
+            return;
+        }
 
 		if (m_TubeLightParams == null || m_TubeLightParams.Length != count)
 			m_TubeLightParams = new TubeLightParams[count];
@@ -276,8 +293,15 @@ public class VolumetricFog : MonoBehaviour
 	{
 		int count = m_AreaLightParamsCB == null ? 0 : m_AreaLightParamsCB.count;
 		m_InjectLightingAndDensity.SetFloat("_AreaLightsCount", count);
-		if (count == 0)
-			return;
+        if (count == 0)
+        {
+#if UNITY_PS4
+            //We need to set the buffer even if it doesn't have nothing to avoid the "Null buffer passed into compute shader warning" message
+            m_AreaLightParamsCB = new ComputeBuffer(1, 4);
+            m_InjectLightingAndDensity.SetBuffer(kernel, "_AreaLights", m_AreaLightParamsCB);
+#endif
+            return;
+        }
 
 		if (m_AreaLightParams == null || m_AreaLightParams.Length != count)
 			m_AreaLightParams = new AreaLightParams[count];
@@ -329,8 +353,15 @@ public class VolumetricFog : MonoBehaviour
 		}
 
 		m_InjectLightingAndDensity.SetFloat("_FogEllipsoidsCount", count);
-		if (count == 0)
-			return;
+        if (count == 0)
+        {
+#if UNITY_PS4
+            //We need to set the buffer even if it doesn't have nothing to avoid the "Null buffer passed into compute shader warning" message
+            m_FogEllipsoidParamsCB = new ComputeBuffer(1, 4);
+            m_InjectLightingAndDensity.SetBuffer(kernel, "_FogEllipsoids", m_FogEllipsoidParamsCB);
+#endif
+            return;
+        }
 
 		if (m_FogEllipsoidParams == null || m_FogEllipsoidParams.Length != count)
 			m_FogEllipsoidParams = new FogEllipsoidParams[count];
